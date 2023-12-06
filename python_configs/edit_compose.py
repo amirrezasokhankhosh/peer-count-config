@@ -59,15 +59,16 @@ cli = {
 
 def edit_volumes(orgs, peers):
     volumes = {}
+    volumes["orderer.example.com"] = None
     for org_num in orgs:
         for peer_num in peers:
             volumes[f"peer{peer_num}.org{org_num}.example.com"] = None
-    volumes["orderer.example.com"] = None
     return volumes
 
 def edit_services(orgs, peers, ports):
     global global_port
     services = {}
+    services["orderer.example.com"] = orderer
     for i in range(len(orgs)):
         for j in range(len(peers)):
             port = ports[i*len(peers) + j]
@@ -85,7 +86,7 @@ def edit_services(orgs, peers, ports):
                                    'CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key', 
                                    'CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt', 
                                    f'CORE_PEER_ID=peer{peer_num}.org{org_num}.example.com', 
-                                   f'CORE_PEER_ADDRESS=peer{peer_num}.org{org_num}.example.com', 
+                                   f'CORE_PEER_ADDRESS=peer{peer_num}.org{org_num}.example.com:{port}', 
                                    f'CORE_PEER_LISTENADDRESS=0.0.0.0:{port}', 
                                    f'CORE_PEER_CHAINCODEADDRESS=peer{peer_num}.org{org_num}.example.com:{port+1}', 
                                    f'CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:{port+1}', 
@@ -108,7 +109,6 @@ def edit_services(orgs, peers, ports):
             services[f"peer{peer_num}.org{org_num}.example.com"] = cfg
             cli["depends_on"].append(f"peer{peer_num}.org{org_num}.example.com")
     services["cli"] = cli
-    services["orderer.example.com"] = orderer
     return services
 
 def edit_compose(orgs, peers, ports):
@@ -116,8 +116,8 @@ def edit_compose(orgs, peers, ports):
     content = yaml.safe_load(file)
     file.close()
 
-    content["volumes"] = edit_volumes(orgs, peers)
     content["services"] = edit_services(orgs, peers, ports)
+    content["volumes"] = edit_volumes(orgs, peers)
     file = open(compose_path, 'w')
-    yaml.dump(content, file)
+    yaml.dump(content, file, sort_keys=False)
     file.close()

@@ -3,7 +3,7 @@ PeerOrgs:
   EnableNodeOUs: true
   Name: Org1
   Template:
-    Count: 3
+    Count: 2
     SANS:
     - localhost
   Users:

@@ -24,7 +24,6 @@ organizations:
     peers:
     - peer0.org${ORG}.example.com
     - peer1.org${ORG}.example.com
-    - peer2.org${ORG}.example.com
 peers:
   peer0.org${ORG}.example.com:
     grpcOptions:
@@ -44,13 +43,4 @@ peers:
 
         '
     url: grpcs://localhost:${P1PORT}
-  peer2.org${ORG}.example.com:
-    grpcOptions:
-      hostnameOverride: peer2.org${ORG}.example.com
-      ssl-target-name-override: peer2.org${ORG}.example.com
-    tlsCACerts:
-      pem: '${PEERPEM}
-
-        '
-    url: grpcs://localhost:${P2PORT}
 version: 1.0.0
