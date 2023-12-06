@@ -1,0 +1,56 @@
+certificateAuthorities:
+  ca.org${ORG}.example.com:
+    caName: ca-org${ORG}
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      pem:
+      - '${CAPEM}
+
+        '
+    url: https://localhost:${CAPORT}
+client:
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+  organization: Org${ORG}
+name: test-network-org${ORG}
+organizations:
+  Org${ORG}:
+    certificateAuthorities:
+    - ca.org${ORG}.example.com
+    mspid: Org${ORG}MSP
+    peers:
+    - peer0.org${ORG}.example.com
+    - peer1.org${ORG}.example.com
+    - peer2.org${ORG}.example.com
+peers:
+  peer0.org${ORG}.example.com:
+    grpcOptions:
+      hostnameOverride: peer0.org${ORG}.example.com
+      ssl-target-name-override: peer0.org${ORG}.example.com
+    tlsCACerts:
+      pem: '${PEERPEM}
+
+        '
+    url: grpcs://localhost:${P0PORT}
+  peer1.org${ORG}.example.com:
+    grpcOptions:
+      hostnameOverride: peer1.org${ORG}.example.com
+      ssl-target-name-override: peer1.org${ORG}.example.com
+    tlsCACerts:
+      pem: '${PEERPEM}
+
+        '
+    url: grpcs://localhost:${P1PORT}
+  peer2.org${ORG}.example.com:
+    grpcOptions:
+      hostnameOverride: peer2.org${ORG}.example.com
+      ssl-target-name-override: peer2.org${ORG}.example.com
+    tlsCACerts:
+      pem: '${PEERPEM}
+
+        '
+    url: grpcs://localhost:${P2PORT}
+version: 1.0.0
